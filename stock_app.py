@@ -7,8 +7,9 @@ from dash.dependencies import Input, Output
 from stock_prediction import prediction
 import json
 
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash()
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 
 #define model prediction
@@ -17,6 +18,7 @@ LSTM, RNN, XGBoot = "./model/lstm.model.h5", "", ""
 #call api model prediction
 train, valid = prediction(LSTM)
 
+#define layout and UI
 df= pd.read_csv("./assets/stock_data.csv")
 
 app.layout = html.Div([
