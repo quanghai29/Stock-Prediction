@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from dash.dependencies import Input, Output
-from stock_prediction import prediction
+import lstm_method as lstm
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -16,7 +16,8 @@ server = app.server
 LSTM, RNN, XGBoot = "./model/lstm.model.h5", "", "./model/xgb_model.h5"
 
 #call api model prediction
-train_lstm, valid_lstm = prediction(LSTM)
+train_lstm, valid_lstm = lstm.prediction(LSTM)
+
 
 
 #print(train)
