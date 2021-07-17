@@ -6,6 +6,7 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from dash.dependencies import Input, Output
 from stock_prediction import prediction
+from xgboost_prediction import xgboost_prediction
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -17,7 +18,10 @@ LSTM, RNN, XGBoot = "./model/lstm.model.h5", "", "./model/xgb_model.h5"
 
 #call api model prediction
 train, valid = prediction(LSTM)
+xgb_train, xgb_valid = xgboost_prediction()
 
+print(xgb_train)
+print(xgb_valid)
 
 #print(train)
 #print(valid)
@@ -114,9 +118,9 @@ app.layout = html.Div([
     [dash.dependencies.State("lstm-dropdown", "value")],
 )
 def update_multi_options(search_value, value):
-	  print(value)
+	    print(value)
 
-    return true
+        # return true
 
 
 # @app.callback(Output('highlow', 'figure'),
