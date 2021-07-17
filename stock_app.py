@@ -5,8 +5,8 @@ import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from dash.dependencies import Input, Output
-from stock_prediction import prediction
 from xgboost_prediction import xgboost_prediction
+import lstm_method as lstm
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -17,8 +17,9 @@ server = app.server
 LSTM, RNN, XGBoot = "./model/lstm.model.h5", "", "./model/xgb_model.h5"
 
 #call api model prediction
-train, valid = prediction(LSTM)
 xgb_train, xgb_valid = xgboost_prediction()
+train_lstm, valid_lstm = lstm.prediction(LSTM)
+
 
 print(xgb_train)
 print(xgb_valid)
@@ -34,75 +35,47 @@ app.layout = html.Div([
    
     dcc.Tabs(id="tabs", children=[
        
-      dcc.Tab(label='NSE-TATAGLOBAL Stock Data',children=[
+      dcc.Tab(label='Long Short Temp Memory Method',children=[
 				html.Div([
-					html.H2("Stock Price Prediction Using LSTM Method",style={"textAlign": "center"}),
-					dcc.Dropdown(id='lstm-dropdown',
-                       options=[{'label': 'Close Price', 'value': 1},
-                       {'label': 'Price Rate of Change','value': 2},], 
-                        multi=True,value=[1],
-                        style={}),
+					html.H2(
+            "Stock Price Prediction Using LSTM Method",
+            style={
+              "textAlign": "center",
+              "color":"blue",
+            }
+          ),
+					dcc.Dropdown(
+                       id='lstm-dropdown',
+                       options=[
+                        {'label': 'Close Price', 'value': 1},
+                        {'label': 'Price Rate of Change','value': 2},
+                       ], 
+                       multi=True,value=[1],
+                       style={}),
 				  dcc.Graph(
-						id="Actual Data",
+						id="lstm-graph",
 						style={'width':'100%'},
-						figure={
-						"data":[
-							go.Scatter(
-								x=train.index,
-								y=train["Close"],
-								#mode='markers',
-								name="train data"
-							),
-
-							go.Scatter(
-								x=valid.index,
-								y=valid["Close"],
-								#mode='markers',
-								name="valid data"
-							),
-
-							go.Scatter(
-								x=valid.index,
-								y=valid["Predictions"],
-								#mode='markers',
-								name="predict data"
-							),
-						],
-						"layout":go.Layout(
-							xaxis={'title':'Date'},
-							yaxis={'title':'Closing Rate'},
-						)
-					}
-				),
-			])        		
-    ]),
-        # dcc.Tab(label='Facebook Stock Data', children=[
-        #     html.Div([
-        #         html.H1("Stocks High vs Lows", 
-        #                 style={'textAlign': 'center'}),
-              
-        #         dcc.Dropdown(id='my-dropdown',
-        #                      options=[{'label': 'Tesla', 'value': 'TSLA'},
-        #                               {'label': 'Apple','value': 'AAPL'}, 
-        #                               {'label': 'Facebook', 'value': 'FB'}, 
-        #                               {'label': 'Microsoft','value': 'MSFT'}], 
-        #                      multi=True,value=['FB'],
-        #                      style={"display": "block", "margin-left": "auto", 
-        #                             "margin-right": "auto", "width": "60%"}),
-        #         dcc.Graph(id='highlow'),
-        #         html.H1("Stocks Market Volume", style={'textAlign': 'center'}),
-         
-        #         dcc.Dropdown(id='my-dropdown2',
-        #                      options=[{'label': 'Tesla', 'value': 'TSLA'},
-        #                               {'label': 'Apple','value': 'AAPL'}, 
-        #                               {'label': 'Facebook', 'value': 'FB'},
-        #                               {'label': 'Microsoft','value': 'MSFT'}], 
-        #                      multi=True,value=['FB'],
-        #                      style={"display": "block", "margin-left": "auto", 
-        #                             "margin-right": "auto", "width": "60%"}),
-        #         dcc.Graph(id='volume')
-        #     ], className="container"),
-        # ])
+				  ),
+			  ]),        		
+      ]),
+      
+      dcc.Tab(label='XGBoots Method',children=[
+				html.Div([
+					html.H2("Stock Price Prediction Using XGBoots Method",style={"textAlign": "center"}),
+					dcc.Dropdown(
+                       id='Xgboots-dropdown',
+                       options=[
+                        {'label': 'Close Price', 'value': 1},
+                        {'label': 'Price Rate of Change','value': 2},
+                       ], 
+                       multi=True,value=[1],
+                       style={}),
+				  dcc.Graph(
+						id="Xgboots-graph",
+						style={'width':'100%'},
+				  ),
+			  ]),        		
+      ]),
     ])
 ])
 
@@ -112,15 +85,47 @@ app.layout = html.Div([
 
 #==============================CALL BACK ENVENT AND FUNCTION============================#
 
-@app.callback(
-    dash.dependencies.Output("lstm-dropdown", "options"),
-    [dash.dependencies.Input("lstm-dropdown", "search_value")],
-    [dash.dependencies.State("lstm-dropdown", "value")],
-)
-def update_multi_options(search_value, value):
-	    print(value)
+## Event for update lstm tab
+@app.callback(Output('lstm-graph', 'figure'),
+              [Input('lstm-dropdown', 'value')])
+def update_graph(selected_dropdown):
+  data = [
+    go.Scatter(
+      x=train_lstm.index,
+      y=train_lstm["Close"],
+      name="train data"
+    ),
+    go.Scatter(
+      x=valid_lstm.index,
+      y=valid_lstm["Close"],
+    )
+  ]
+  for typepred in selected_dropdown:
+    if typepred == 1:
+      data.append(
+        go.Scatter(
+          x=valid_lstm.index,
+          y=valid_lstm["Predictions"],
+          name="predict data by closing price"
+        )
+      )
+    if typepred == 2:
+      print(2)
 
-        # return true
+  figure = {
+    "data": data,
+    "layout": go.Layout(
+      xaxis={"title":"Date"},
+      yaxis={"title":"Price"}
+    )
+  }
+
+  return figure
+
+
+# Event for update XGBoots tab
+
+# Event for update RNN tab
 
 
 # @app.callback(Output('highlow', 'figure'),
