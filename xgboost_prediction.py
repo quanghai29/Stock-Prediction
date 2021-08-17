@@ -2,13 +2,14 @@
 import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import GridSearchCV
+from keras.models import load_model
 
 # Mute sklearn warnings
 from warnings import simplefilter
 simplefilter(action='ignore', category=FutureWarning)
 simplefilter(action='ignore', category=DeprecationWarning)
 
-def xgboost_prediction():
+def xgboost_prediction(model):
     #Read data
     df=pd.read_csv("./assets/NSE-TATA.csv")
     df['Date'] = pd.to_datetime(df['Date'])
@@ -48,22 +49,26 @@ def xgboost_prediction():
     y_test  = test_df['Close'].copy()
     X_test  = test_df.drop(['Close'], 1)
 
-    parameters = {
-        'n_estimators': [100, 200, 300, 400],
-        'learning_rate': [0.001, 0.005, 0.01, 0.05],
-        'max_depth': [8, 10, 12, 15],
-        'gamma': [0.001, 0.005, 0.01, 0.02],
-        'random_state': [42]
-    }
+    # parameters = {
+    #     'n_estimators': [100, 200, 300, 400],
+    #     'learning_rate': [0.001, 0.005, 0.01, 0.05],
+    #     'max_depth': [8, 10, 12, 15],
+    #     'gamma': [0.001, 0.005, 0.01, 0.02],
+    #     'random_state': [42]
+    # }
 
     eval_set = [(X_train, y_train)]
-    model = xgb.XGBRegressor(eval_set=eval_set, objective='reg:squarederror', verbose=False)
-    clf = GridSearchCV(model, parameters)
+    # model = xgb.XGBRegressor(eval_set=eval_set, objective='reg:squarederror', verbose=False)
+    # clf = GridSearchCV(model, parameters)
 
-    clf.fit(X_train, y_train)
+    # clf.fit(X_train, y_train)
 
-    model = xgb.XGBRegressor(**clf.best_params_, objective='reg:squarederror')
-    model.fit(X_train, y_train, eval_set=eval_set, verbose=False)
+    # model = xgb.XGBRegressor(**clf.best_params_, objective='reg:squarederror')
+    # model.fit(X_train, y_train, eval_set=eval_set, verbose=False)
+
+    #Load yourmodel
+    model=load_model(model)
+
     y_pred = model.predict(X_test)
 
     xgb_train=df.loc[:test_split_idx].copy()
