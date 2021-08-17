@@ -19,22 +19,10 @@ LSTM, RNN = "./model/lstm.model.h5", "./model/rnn_model.h5"
 XGBoot = "./model/xgb_model.h5"
 
 #call api model prediction
-#xgb_train, xgb_valid = xgboost.xgboost_prediction()
 
+#xgb_train, xgb_valid = xgboost.xgboost_prediction()
 train_lstm, valid_lstm = lstm.prediction(LSTM)
 train_rnn, valid_rnn ,y_predic_rnn = rnn.prediction(RNN)
-
-# print(valid_rnn.Close)
-# print(y_predic_rnn)
-# print("train lstm")
-# print(train_lstm.index)
-
-# print("train rnn")
-# print(train_rnn["Date"])
-# print("valid rnn")
-# print(valid_rnn)
-# print("predic_rnn")
-# print(predic_rnn)
 
 #===================================LAYOUT====================================================#
 app.layout = html.Div([
