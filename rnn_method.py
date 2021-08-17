@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
 import os
+from keras.models import load_model
 
 def prediction(model):
 
@@ -93,5 +94,7 @@ def prediction(model):
   # scaling back from 0-1 to original
   y_pred_of_test = scaler.inverse_transform(y_pred_of_test) 
 
-  
+
+#   x_pred_of_test = validation_data.Date.iloc[time_step:]
+
   return train_data, validation_data, y_pred_of_test
