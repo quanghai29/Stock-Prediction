@@ -3,13 +3,15 @@ import pandas as pd
 import xgboost as xgb
 from sklearn.model_selection import GridSearchCV
 from keras.models import load_model
+import os
+import tensorflow as tf
 
 # Mute sklearn warnings
 from warnings import simplefilter
 simplefilter(action='ignore', category=FutureWarning)
 simplefilter(action='ignore', category=DeprecationWarning)
 
-def xgboost_prediction(model):
+def xgboost_prediction():
     #Read data
     df=pd.read_csv("./assets/NSE-TATA.csv")
     df['Date'] = pd.to_datetime(df['Date'])
@@ -67,7 +69,8 @@ def xgboost_prediction(model):
     # model.fit(X_train, y_train, eval_set=eval_set, verbose=False)
 
     #Load yourmodel
-    model=load_model(model)
+    # model = load_model(os.path.join("./model/","xgb.model.h5"))
+    model = tf.keras.models.load_model("xgb.model.h5")
 
     y_pred = model.predict(X_test)
 
