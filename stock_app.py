@@ -18,7 +18,7 @@ LSTM, RNN = "./model/lstm.model.h5", ""
 XGBoot = "./model/xgb_model.h5"
 
 #call api model prediction
-xgb_train, xgb_valid = xgboost.xgboost_prediction()
+#xgb_train, xgb_valid = xgboost.xgboost_prediction()
 train_lstm, valid_lstm = lstm.prediction(LSTM)
 
 

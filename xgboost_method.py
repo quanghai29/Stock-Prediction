@@ -70,7 +70,7 @@ def xgboost_prediction():
 
     #Load yourmodel
     # model = load_model(os.path.join("./model/","xgb.model.h5"))
-    model = tf.keras.models.load_model("xgb.model.h5")
+    model = tf.keras.models.load_model("xgboost.model.h5")
 
     y_pred = model.predict(X_test)
 
