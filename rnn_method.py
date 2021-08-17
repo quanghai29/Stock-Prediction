@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import warnings
 warnings.filterwarnings("ignore")
 import os
+from keras.models import load_model
 
 def prediction(model):
 
