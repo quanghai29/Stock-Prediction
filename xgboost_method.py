@@ -9,7 +9,7 @@ from warnings import simplefilter
 simplefilter(action='ignore', category=FutureWarning)
 simplefilter(action='ignore', category=DeprecationWarning)
 
-def prediction(model):
+def xgboost_prediction(model):
     #Read data
     df=pd.read_csv("./assets/NSE-TATA.csv")
     df['Date'] = pd.to_datetime(df['Date'])
@@ -57,7 +57,7 @@ def prediction(model):
     #     'random_state': [42]
     # }
 
-    # eval_set = [(X_train, y_train)]
+    eval_set = [(X_train, y_train)]
     # model = xgb.XGBRegressor(eval_set=eval_set, objective='reg:squarederror', verbose=False)
     # clf = GridSearchCV(model, parameters)
 
@@ -65,6 +65,8 @@ def prediction(model):
 
     # model = xgb.XGBRegressor(**clf.best_params_, objective='reg:squarederror')
     # model.fit(X_train, y_train, eval_set=eval_set, verbose=False)
+
+    #Load yourmodel
     model=load_model(model)
 
     y_pred = model.predict(X_test)

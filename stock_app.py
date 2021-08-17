@@ -14,10 +14,11 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 
 #define model prediction
-LSTM, RNN, XGBoot = "./model/lstm.model.h5", "", "./model/xgb_model.h5"
+LSTM, RNN = "./model/lstm.model.h5", ""
+XGBoot = "./model/xgb_model.h5"
 
 #call api model prediction
-# xgb_train, xgb_valid = xgboost.prediction(XGBoot)
+xgb_train, xgb_valid = xgboost_prediction(XGBoot)
 train_lstm, valid_lstm = lstm.prediction(LSTM)
 
 
