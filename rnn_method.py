@@ -94,7 +94,8 @@ def prediction(model):
   # scaling back from 0-1 to original
   y_pred_of_test = scaler.inverse_transform(y_pred_of_test) 
 
+  y_result = []
+  for i in range(0, len(y_pred_of_test)):
+    y_result.append(y_pred_of_test[i][0])
 
-#   x_pred_of_test = validation_data.Date.iloc[time_step:]
-
-  return train_data, validation_data, y_pred_of_test
+  return train_data, validation_data, y_result
