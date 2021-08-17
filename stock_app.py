@@ -5,8 +5,8 @@ import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from dash.dependencies import Input, Output
-from xgboost_prediction import xgboost_prediction
 import lstm_method as lstm
+import xgboost_method as xgboost
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -17,12 +17,12 @@ server = app.server
 LSTM, RNN, XGBoot = "./model/lstm.model.h5", "", "./model/xgb_model.h5"
 
 #call api model prediction
-xgb_train, xgb_valid = xgboost_prediction()
+# xgb_train, xgb_valid = xgboost.prediction(XGBoot)
 train_lstm, valid_lstm = lstm.prediction(LSTM)
 
 
-print(xgb_train)
-print(xgb_valid)
+# print(xgb_train)
+# print(xgb_valid)
 
 #print(train)
 #print(valid)
